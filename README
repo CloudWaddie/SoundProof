@@ -1,2 +1,4 @@
-# DO NOT USE
-## STILL IN BETA
+# SoundProof v1.0
+## Usage
+---
+`python soundproof.py -h`
