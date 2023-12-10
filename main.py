@@ -7,10 +7,8 @@ def init():
     print('Made by CloudWaddie')
     print('==================')
 def decode():
-        print(args.filename)
-        if args.t.lower() == 'decode':
-            soundproof = SoundProofObject(args.filename)
-            soundproof.decode()
+        soundproof = SoundProofObject(args.filename)
+        soundproof.decode()
             
 class SoundProofObject:
     def __init__(self, filename):
@@ -49,7 +47,8 @@ parser.add_argument('filename', help='File to encode/decode', metavar='FILENAME'
 # Not needed: parser.add_argument('--decode', help='Decode a file', metavar='FILENAME')
 args = parser.parse_args()
 try:
-    decode()
+    if args.t.lower() == 'decode':
+        decode()
 except argparse.ArgumentError:
     print()
     print('No file specified\nRun with --help for more info')
