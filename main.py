@@ -16,9 +16,8 @@ class SoundProofObject:
      def __init__(self, filename):
          self.filename = filename
          self.wavefile = wave.open(filename, 'rb')
-         self.frames = self.wavefile.readframes(-1)
-         self.soundproof = self.frames[:44]
-         self.message = self.frames[44:]
+         self.nframes = self.wavefile.getnframes()
+         print(self.nframes)
          self.wavefile.close()
 init()
 
