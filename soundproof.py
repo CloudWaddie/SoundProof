@@ -1,6 +1,7 @@
 # Import dependencies - will be packaged in the executable
 import argparse
 import wave
+import os
 
 def init():
     print('SoundProof v1.0')
@@ -17,6 +18,11 @@ def encode():
 class SoundProofObject:
     def __init__(self, filename):
         self.filename = filename
+        # Get the directory name from the filename
+        dirname = os.path.dirname(filename)
+        # If the directory doesn't exist, create it
+        if dirname and not os.path.exists(dirname):
+            os.makedirs(dirname)
     def decode(self):
         try:
             self.wavefile = wave.open(self.filename, 'rb')  # Change 'wb' to 'rb' for reading
