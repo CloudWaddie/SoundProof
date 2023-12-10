@@ -9,33 +9,47 @@ def init():
 def decode():
         soundproof = SoundProofObject(args.filename)
         soundproof.decode()
+def encode():
+    soundproof = SoundProofObject(args.filename)
+    message = input('Enter message to encode: ')
+    soundproof.encode(message)
             
 class SoundProofObject:
     def __init__(self, filename):
         self.filename = filename
-        self.wavefile = wave.open(filename, 'rb')
     def decode(self):
+        try:
+            self.wavefile = wave.open(self.filename, 'rb')  # Change 'wb' to 'rb' for reading
+        except wave.Error:
+            print('Error: File is not a .wav file')
+            exit("Exited. Reason: File is not a .wav file")
         print('Decoding...')
+        # Create an empty string to store the decoded message
+        message = ''
+        # Get the number of frames from the wave file
         self.nframes = self.wavefile.getnframes()
-        self.channels = self.wavefile.getnchannels()
-        if self.channels == 2:
-            print('Error: Stereo audio not supported')
-            print('This audio has not been encoded correctly')
-            exit("Exited. Reason: Stereo audio not supported")
-        print(self.nframes)
-        # Create an empty dictionary for the table
-        table = {}
-
-        # Populate the table
-        for i in range(256):
-            table[i] = chr(i)
-        for frame in range(self.nframes):
+        # Read the frames of the wave file
+        for _ in range(self.nframes):
             currentframe = self.wavefile.readframes(1)
             # Take the first byte of the frame and convert it to an integer
             byte = currentframe[0]
-            # Convert the byte to an ASCII character using the table
-            ascii_char = table[byte]
-            print(ascii_char)
+            # Convert the byte to an ASCII character and add it to the message
+            message += chr(byte)
+        print('Message decoded from ' + self.filename + ': ' + message)
+    def encode(self, message):
+        try:
+            self.wavefile = wave.open(self.filename, 'wb')
+        except wave.Error:
+            print('Error: File is not a .wav file')
+            exit("Exited. Reason: File is not a .wav file")
+        print('Encoding...')
+        # Set the parameters of the new wave file to match the original
+        self.wavefile.setparams((1, 1, 44100, 0, 'NONE', 'not compressed'))
+        # Convert the message to bytes and write it to the new wave file
+        for char in message:
+            self.wavefile.writeframes(bytes([ord(char)]))
+        self.wavefile.close()
+        print('Message encoded to ' + self.filename)
 init()
 
 parser = argparse.ArgumentParser(
@@ -49,6 +63,8 @@ args = parser.parse_args()
 try:
     if args.t.lower() == 'decode':
         decode()
+    elif args.t.lower() == 'encode':
+        encode()
 except argparse.ArgumentError:
     print()
     print('No file specified\nRun with --help for more info')
