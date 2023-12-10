@@ -9,16 +9,35 @@ def init():
 def decode():
         print(args.filename)
         if args.t.lower() == 'decode':
-            print('Decoding...')
-            SoundProofObject(args.filename)
+            soundproof = SoundProofObject(args.filename)
+            soundproof.decode()
             
 class SoundProofObject:
-     def __init__(self, filename):
-         self.filename = filename
-         self.wavefile = wave.open(filename, 'rb')
-         self.nframes = self.wavefile.getnframes()
-         print(self.nframes)
-         self.wavefile.close()
+    def __init__(self, filename):
+        self.filename = filename
+        self.wavefile = wave.open(filename, 'rb')
+    def decode(self):
+        print('Decoding...')
+        self.nframes = self.wavefile.getnframes()
+        self.channels = self.wavefile.getnchannels()
+        if self.channels == 2:
+            print('Error: Stereo audio not supported')
+            print('This audio has not been encoded correctly')
+            exit("Exited. Reason: Stereo audio not supported")
+        print(self.nframes)
+        # Create an empty dictionary for the table
+        table = {}
+
+        # Populate the table
+        for i in range(256):
+            table[i] = chr(i)
+        for frame in range(self.nframes):
+            currentframe = self.wavefile.readframes(1)
+            # Take the first byte of the frame and convert it to an integer
+            byte = currentframe[0]
+            # Convert the byte to an ASCII character using the table
+            ascii_char = table[byte]
+            print(ascii_char)
 init()
 
 parser = argparse.ArgumentParser(
