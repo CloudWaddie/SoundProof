@@ -10,7 +10,10 @@ def decode():
         print(args.filename)
         if args.t.lower() == 'decode':
             print('Decoding...')
-            loadfile = wave.open(args.filename, 'rb')
+            wavfile = wave.open(args.filename, 'rb')
+            
+class SoundProofObject:
+     
 init()
 
 parser = argparse.ArgumentParser(
