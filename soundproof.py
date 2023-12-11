@@ -64,6 +64,7 @@ parser = argparse.ArgumentParser(
                     epilog='Made by CloudWaddie')
 parser.add_argument('-t', help='Encode/Decode a file', metavar='ENCODE/DECODE', required=True)
 parser.add_argument('filename', help='File to encode/decode', metavar='FILENAME')
+parser.add_argument('--version', action='version', version='%(prog)s 1.0') 
 # Not needed: parser.add_argument('--decode', help='Decode a file', metavar='FILENAME')
 args = parser.parse_args()
 try:
