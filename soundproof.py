@@ -4,7 +4,7 @@ import wave
 import os
 
 def init():
-    print('SoundProof v1.0')
+    print('SoundProof v2.0')
     print('Made by CloudWaddie')
     print('==================')
 def decode():
@@ -62,12 +62,20 @@ parser = argparse.ArgumentParser(
                     prog='SoundProof',
                     description='An audio encoder and decoder (for hiding messages in audio files).',
                     epilog='Made by CloudWaddie')
-parser.add_argument('-t', help='Encode/Decode a file', metavar='ENCODE/DECODE', required=True)
+parser.add_argument('-t', help='Encode/Decode a file', metavar='ENCODE/DECODE')
 parser.add_argument('filename', help='File to encode/decode', metavar='FILENAME')
-parser.add_argument('--version', action='version', version='%(prog)s 1.0') 
+parser.add_argument('--version', '-v', action='version', version='Current version is %(prog)s 2.0 beta') 
+parser.add_argument('--input', '-i', help='Input file', metavar='INPUTFILE')
 # Not needed: parser.add_argument('--decode', help='Decode a file', metavar='FILENAME')
 args = parser.parse_args()
 try:
+    if args.input and os.path.exists(args.input):
+        print('Input file: ' + args.input)
+    elif args.input and not os.path.exists(args.input):
+        print('Error: Input file does not exist')
+        exit("Exited. Reason: Input file does not exist")
+    else:
+        print('No input file specified')
     if args.t.lower() == 'decode':
         decode()
     elif args.t.lower() == 'encode':
