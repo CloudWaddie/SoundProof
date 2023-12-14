@@ -14,6 +14,16 @@ def encode():
     soundproof = SoundProofObject(args.filename)
     message = input('Enter message to encode: ')
     soundproof.encode(message)
+    soundproof.wavefile.close()
+def getinput(userinput, type):
+    soundproofinput = SoundProofObject(userinput)
+    if type == 'encode':
+        message = input('Enter message to encode: ')
+        soundproofinput.encode(message)
+        soundproofinput.input(userinput)
+    else:
+        print('INPUT can only be used with type ENCODE')
+        exit("Exited. Reason: INPUT can only be used with type ENCODE")
             
 class SoundProofObject:
     def __init__(self, filename):
@@ -54,8 +64,10 @@ class SoundProofObject:
         # Convert the message to bytes and write it to the new wave file
         for char in message:
             self.wavefile.writeframes(bytes([ord(char)]))
-        self.wavefile.close()
         print('Message encoded to ' + self.filename)
+    def input(self, input):
+        pass
+
 init()
 
 parser = argparse.ArgumentParser(
@@ -68,19 +80,25 @@ parser.add_argument('--version', '-v', action='version', version='Current versio
 parser.add_argument('--input', '-i', help='Input file', metavar='INPUTFILE')
 # Not needed: parser.add_argument('--decode', help='Decode a file', metavar='FILENAME')
 args = parser.parse_args()
-try:
-    if args.input and os.path.exists(args.input):
-        print('Input file: ' + args.input)
-    elif args.input and not os.path.exists(args.input):
-        print('Error: Input file does not exist')
-        exit("Exited. Reason: Input file does not exist")
-    else:
-        print('No input file specified')
-    if args.t.lower() == 'decode':
-        decode()
-    elif args.t.lower() == 'encode':
-        encode()
-except argparse.ArgumentError:
-    print()
-    print('No file specified\nRun with --help for more info')
-    exit("Exited. Reason: No file specified")
+def runmain():
+    #bypasses
+    try:
+        if args.input and os.path.exists(args.input):
+            print('Input file: ' + args.input)
+            gettype = args.t.lower()
+            getinput(args.input, gettype)
+            
+        elif args.input and not os.path.exists(args.input):
+            print('Error: Input file does not exist')
+            exit("Exited. Reason: Input file does not exist")
+        else:
+            print('No input file specified')
+        if args.t.lower() == 'decode':
+            decode()
+        elif args.t.lower() == 'encode':
+            encode()
+    except argparse.ArgumentError:
+        print()
+        print('No file specified\nRun with --help for more info')
+        exit("Exited. Reason: No file specified")
+runmain()
